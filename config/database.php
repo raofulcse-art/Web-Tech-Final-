@@ -3,7 +3,7 @@ function getDB() {
     $host = 'localhost';
     $db   = 'blog_platform';
     $user = 'root';
-    $pass = '';  // XAMPP default has no password
+    $pass = '';  
 
     try {
         $pdo = new PDO(
