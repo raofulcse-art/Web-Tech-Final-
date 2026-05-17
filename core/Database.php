@@ -1,17 +1,26 @@
 <?php
-require_once __DIR__."/../config/config.php";
+
+require_once __DIR__ . "/../config/config.php";
 
 class Database {
+
     public function connect(){
+
         try {
-            return new PDO(
-                "mysql:host=".DB_HOST.";dbname=".DB_NAME,
+
+            $conn = new PDO(
+                "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
                 DB_USER,
                 DB_PASS
             );
-        } catch(Exception $e){
+
             
-            die("Database is not connected!");
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            return $conn;
+
+        } catch (PDOException $e) {
+            die("Database Connection Failed: " . $e->getMessage());
         }
     }
 }
