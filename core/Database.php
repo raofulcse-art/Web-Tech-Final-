@@ -10,7 +10,8 @@ class Database {
                 DB_PASS
             );
         } catch(Exception $e){
-            die("DB NOT CONNECTED");
+            
+            die("Database is not connected!");
         }
     }
 }
