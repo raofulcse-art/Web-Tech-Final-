@@ -2,24 +2,24 @@
 
 <form method="POST">
 
-<label>Email Address:</label>
-<br>
-<input type="email" name="email" placeholder="Enter your email" required>
+<label>Email:</label><br>
+<input type="email" name="email" required>
+<small>Enter your registered email</small>
 <br><br>
 
-<label>Password:</label>
-<br>
-<input type="password" name="password" placeholder="Enter your password" required>
-<br>
-<br>
+<label>Password:</label><br>
+<input type="password" name="password" required>
+<small>Enter your password</small>
+<br><br>
 
-<label>
-<input type="checkbox" name="remember"> Remember Me
-</label>
-
-<br>
-<br>
-
-<button type="submit" name="submit">Login</button>
+<button name="submit">Login</button>
 
 </form>
+
+<?php if(isset($_GET['error'])) { ?>
+<p style="color:red;">Invalid email or password</p>
+<?php } ?>
+
+<?php if(isset($_GET['success'])) { ?>
+<p style="color:green;">Registration successful! Please login</p>
+<?php } ?>

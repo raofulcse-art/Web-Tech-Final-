@@ -1,36 +1,35 @@
-<h2>User Registration</h2>
+<h2>Register Account</h2>
 
 <form method="POST">
 
-<label>Full Name</label>
-<br>
-<small>Please enter your full name</small><br>
-<input type="text" name="name" placeholder="e.g. John Doe" required>
+<label>Name:</label><br>
+<input type="text" name="name" required>
+<small>Enter your full name</small>
 <br><br>
 
-<label>Email Address</label><br>
-<small>Use a valid email address</small>
-<br>
-<input type="email" name="email" placeholder="e.g. example@gmail.com" required>
+<label>Email:</label><br>
+<input type="email" name="email" required>
+<small>Enter valid email address</small>
 <br><br>
 
-<label>Password</label><br>
+<label>Password:</label><br>
+<input type="password" name="password" required>
 <small>Minimum 8 characters required</small>
-<br>
-<input type="password" name="password" placeholder="Enter secure password" required>
 <br><br>
 
-<label>Select Account Type</label>
-<br>
-<small>Reader = normal user, Author = blog writer request</small><br>
-
+<label>Role:</label><br>
 <input type="radio" name="role" value="reader" checked> Reader
 <input type="radio" name="role" value="author"> Author
+<br><br>
 
-<br>
+<button name="submit">Register</button>
 
-<br>
-
-<button name="submit">Create Account</button>
+<a href="login.php">
+<button type="button">Already have account? Login</button>
+</a>
 
 </form>
+
+<?php if(isset($_GET['error'])) { ?>
+<p style="color:red;">Email already exists or error occurred</p>
+<?php } ?>

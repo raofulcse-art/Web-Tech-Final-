@@ -8,11 +8,10 @@ class User {
         $this->conn = $db;
     }
 
-   
+  
     public function register($name,$email,$pass,$role){
 
         $check = $this->conn->query("SELECT * FROM users WHERE email='$email'");
-
         if($check->rowCount() > 0){
             return false;
         }
@@ -32,23 +31,20 @@ class User {
         ");
     }
 
-  
+   
     public function login($email){
-        
         return $this->conn->query("
             SELECT * FROM users WHERE email='$email'
         ");
     }
 
-  
     public function getById($id){
-
         return $this->conn->query("
             SELECT * FROM users WHERE id=$id
         ")->fetch(PDO::FETCH_ASSOC);
     }
 
-   
+  
     public function updateProfile($id,$bio,$facebook,$img){
 
         return $this->conn->query("
@@ -60,25 +56,22 @@ class User {
         ");
     }
 
-    
-    public function getAll(){
 
+    public function getAll(){
         return $this->conn->query("SELECT * FROM users");
     }
 
-  
+   
     public function promote($id){
         return $this->conn->query("
-            UPDATE users SET role='author', pending_author=0
-            WHERE id=$id
+            UPDATE users SET role='author', pending_author=0 WHERE id=$id
         ");
     }
 
-
+   
     public function saveToken($id,$token){
         return $this->conn->query("
-            UPDATE users SET remember_token='$token'
-            WHERE id=$id
+            UPDATE users SET remember_token='$token' WHERE id=$id
         ");
     }
 
@@ -86,7 +79,5 @@ class User {
         return $this->conn->query("
             SELECT * FROM users WHERE remember_token='$token'
         ");
-
-
     }
 }
