@@ -20,7 +20,6 @@ class User {
         return $stmt->execute([$name,$email,$hash,$role,$pending]);
     }
 
-  
     public function login($email){
 
         $stmt = $this->db->prepare("
@@ -32,7 +31,6 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    
     public function getById($id){
 
         $stmt = $this->db->prepare("
@@ -44,7 +42,7 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateProfile($id,$bio,$social,$image){
+    public function updateProfile($id,$bio,$social,$img){
 
         $stmt = $this->db->prepare("
             UPDATE users 
@@ -52,20 +50,16 @@ class User {
             WHERE id=?
         ");
 
-        return $stmt->execute([$bio,$social,$image,$id]);
+        return $stmt->execute([$bio,$social,$img,$id]);
     }
 
-    
     public function getAll(){
 
-        $stmt = $this->db->query("
+        return $this->db->query("
             SELECT * FROM users
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        ")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-   
     public function promote($id){
 
         $stmt = $this->db->prepare("
@@ -82,26 +76,19 @@ class User {
         $hash = password_hash($token,PASSWORD_BCRYPT);
 
         $stmt = $this->db->prepare("
-            UPDATE users 
-            SET remember_token=?
-            WHERE id=?
+            UPDATE users SET remember_token=? WHERE id=?
         ");
 
         return $stmt->execute([$hash,$id]);
     }
 
-
     public function findByToken($token){
 
-        $stmt = $this->db->query("
-            SELECT * FROM users
-        ");
+        $users = $this->db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
 
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach($users as $user){
-            if(password_verify($token,$user['remember_token'])){
-                return $user;
+        foreach($users as $u){
+            if(password_verify($token,$u['remember_token'])){
+                return $u;
             }
         }
 
