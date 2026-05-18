@@ -11,9 +11,18 @@
 $social = json_decode($user['social_links'], true);
 ?>
 
-<p><b>Twitter:</b> <?= $social['twitter'] ?? '' ?></p>
-<p><b>GitHub:</b> <?= $social['github'] ?? '' ?></p>
+<p><b>Twitter:</b>
+<?php if(!empty($social['twitter'])) { ?>
+    <a href="<?= $social['twitter'] ?>" target="_blank">
+        <?= $social['twitter'] ?>
+    </a>
+<?php } else { echo "N/A"; } ?>
+</p>
 
-<br>
-
-<a href="javascript:history.back()">Back</a>
+<p><b>GitHub:</b>
+<?php if(!empty($social['github'])) { ?>
+    <a href="<?= $social['github'] ?>" target="_blank">
+        <?= $social['github'] ?>
+    </a>
+<?php } else { echo "N/A"; } ?>
+</p>
