@@ -2,82 +2,87 @@
 
 class User {
 
-    public $conn;
+    private $db;
 
     public function __construct($db){
-        $this->conn = $db;
+        $this->db = $db;
     }
 
-  
-    public function register($name,$email,$pass,$role){
+    
+    public function register($name,$email,$password,$role){
 
-        $check = $this->conn->query("SELECT * FROM users WHERE email='$email'");
-        if($check->rowCount() > 0){
-            return false;
-        }
+        $check = $this->db->prepare("SELECT id FROM users WHERE email=?");
+        $check->execute([$email]);
+
+        if($check->rowCount() > 0) return false;
 
         $pending = 0;
 
         if($role == "author"){
-            $pending = 1;
             $role = "reader";
+            $pending = 1;
         }
 
-        $hash = password_hash($pass,PASSWORD_DEFAULT);
+        $hash = password_hash($password,PASSWORD_DEFAULT);
 
-        return $this->conn->query("
+        $stmt = $this->db->prepare("
             INSERT INTO users(name,email,password_hash,role,pending_author)
-            VALUES('$name','$email','$hash','$role','$pending')
+            VALUES(?,?,?,?,?)
         ");
+
+        return $stmt->execute([$name,$email,$hash,$role,$pending]);
     }
 
    
     public function login($email){
-        return $this->conn->query("
-            SELECT * FROM users WHERE email='$email'
-        ");
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email=?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+   
     public function getById($id){
-        return $this->conn->query("
-            SELECT * FROM users WHERE id=$id
-        ")->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id=?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-  
-    public function updateProfile($id,$bio,$facebook,$img){
-
-        return $this->conn->query("
-            UPDATE users SET
-            bio='$bio',
-            social_links='$facebook',
-            profile_pic_path='$img'
-            WHERE id=$id
+   
+    public function updateProfile($id,$bio,$social,$img){
+        $stmt = $this->db->prepare("
+            UPDATE users SET bio=?, social_links=?, profile_pic_path=? WHERE id=?
         ");
+        return $stmt->execute([$bio,$social,$img,$id]);
     }
 
-
+   
     public function getAll(){
-        return $this->conn->query("SELECT * FROM users");
+        return $this->db->query("SELECT * FROM users");
     }
 
    
     public function promote($id){
-        return $this->conn->query("
-            UPDATE users SET role='author', pending_author=0 WHERE id=$id
+        $stmt = $this->db->prepare("
+            UPDATE users SET role='author', pending_author=0 WHERE id=?
         ");
+        return $stmt->execute([$id]);
     }
 
-   
+    
     public function saveToken($id,$token){
-        return $this->conn->query("
-            UPDATE users SET remember_token='$token' WHERE id=$id
-        ");
+        $hash = password_hash($token,PASSWORD_DEFAULT);
+        $stmt = $this->db->prepare("UPDATE users SET remember_token=? WHERE id=?");
+        return $stmt->execute([$hash,$id]);
     }
 
-    public function getByToken($token){
-        return $this->conn->query("
-            SELECT * FROM users WHERE remember_token='$token'
-        ");
+    public function findByToken($token){
+        $users = $this->db->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($users as $u){
+            if(password_verify($token,$u['remember_token'])){
+                return $u;
+            }
+        }
+        return false;
     }
 }
