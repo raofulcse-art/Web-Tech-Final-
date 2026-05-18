@@ -12,7 +12,7 @@ class UserController {
         $this->model = new User($db->connect());
     }
 
-    
+
     public function register(){
 
         if(isset($_POST['submit'])){
@@ -40,7 +40,7 @@ class UserController {
         include "../app/views/users/register.php";
     }
 
-    
+   
     public function login(){
 
         session_start();
@@ -76,7 +76,7 @@ class UserController {
         include "../app/views/users/login.php";
     }
 
-    
+   
     public function profile(){
 
         session_start();
@@ -130,7 +130,7 @@ class UserController {
         include "../app/views/users/profile.php";
     }
 
-    
+  
     public function users(){
 
         session_start();
@@ -149,5 +149,19 @@ class UserController {
 
         header("Location: users.php");
         exit;
+    }
+
+   
+    public function author(){
+
+        $id = $_GET['id'];
+
+        $user = $this->model->getById($id);
+
+        if(!$user){
+            die("Author not found");
+        }
+
+        include "../app/views/users/author.php";
     }
 }
