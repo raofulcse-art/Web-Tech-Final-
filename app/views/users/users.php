@@ -8,7 +8,6 @@
 <th>Email</th>
 <th>Role</th>
 <th>Action</th>
-
 </tr>
 
 <?php while($u = $users->fetch(PDO::FETCH_ASSOC)) { ?>
