@@ -100,17 +100,17 @@ class UserController {
                 );
             }
 
-            $social = json_encode([
-                "twitter"=>$_POST['twitter'],
-                "github"=>$_POST['github']
-            ]);
+           $social = json_encode([
+    "twitter" => $_POST['twitter'],
+    "github"  => $_POST['github']
+]);
 
-            $this->model->updateProfile(
-                $_SESSION['user_id'],
-                $_POST['bio'],
-                $social,
-                $img
-            );
+$this->model->updateProfile(
+    $_SESSION['user_id'],
+    $_POST['bio'],
+    $social,
+    $img
+);
 
             header("Location: profile.php?updated=1");
             exit;
