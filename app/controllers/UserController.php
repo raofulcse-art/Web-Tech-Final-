@@ -5,40 +5,65 @@ require_once "../app/models/User.php";
 
 class UserController {
 
-    public $model;
+    private $model;
 
     public function __construct(){
         $db = new Database();
         $this->model = new User($db->connect());
     }
 
-    // REGISTER
+    
     public function register(){
 
         if(isset($_POST['submit'])){
-            $this->model->register($_POST['name'],$_POST['email'],$_POST['password'],$_POST['role']);
-            header("Location: login.php?success=1");
+
+            if(strlen($_POST['password']) < 8){
+                header("Location: register.php?error=pass");
+                exit;
+            }
+
+            $ok = $this->model->register(
+                $_POST['name'],
+                $_POST['email'],
+                $_POST['password'],
+                $_POST['role']
+            );
+
+            if($ok){
+                header("Location: login.php?success=1");
+            } else {
+                header("Location: register.php?error=email");
+            }
             exit;
         }
 
         include "../app/views/users/register.php";
     }
 
-    // LOGIN
+    
     public function login(){
 
         session_start();
 
         if(isset($_POST['submit'])){
 
-            $res = $this->model->login($_POST['email']);
-            $user = $res->fetch(PDO::FETCH_ASSOC);
+            $user = $this->model->login($_POST['email']);
 
             if($user && password_verify($_POST['password'],$user['password_hash'])){
 
                 $_SESSION['user_id']=$user['id'];
                 $_SESSION['name']=$user['name'];
                 $_SESSION['role']=$user['role'];
+
+                // remember me
+                if(isset($_POST['remember'])){
+
+                    $token = bin2hex(random_bytes(16));
+
+                    $this->model->saveToken($user['id'],$token);
+
+                    setcookie("remember_me",$token,time()+60*60*24*30,"/");
+                }
 
                 header("Location: profile.php?login=success");
                 exit;
@@ -51,7 +76,7 @@ class UserController {
         include "../app/views/users/login.php";
     }
 
-    // PROFILE
+    
     public function profile(){
 
         session_start();
@@ -67,7 +92,18 @@ class UserController {
 
             $img = $user['profile_pic_path'];
 
-            if(isset($_FILES['image']['name']) && $_FILES['image']['name']!=""){
+            if(!empty($_FILES['image']['name'])){
+
+                $ext = pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
+
+                if(!in_array($ext,['jpg','jpeg','png'])){
+                    die("Invalid file type");
+                }
+
+                if($_FILES['image']['size'] > 1000000){
+                    die("File too large");
+                }
+
                 $img = time().$_FILES['image']['name'];
 
                 move_uploaded_file(
@@ -76,14 +112,14 @@ class UserController {
                 );
             }
 
-            $facebook = json_encode([
+            $social = json_encode([
                 "facebook"=>$_POST['facebook']
             ]);
 
             $this->model->updateProfile(
                 $_SESSION['user_id'],
                 $_POST['bio'],
-                $facebook,
+                $social,
                 $img
             );
 
@@ -94,7 +130,7 @@ class UserController {
         include "../app/views/users/profile.php";
     }
 
-    // USERS (ADMIN)
+    
     public function users(){
 
         session_start();
@@ -104,7 +140,7 @@ class UserController {
         include "../app/views/users/users.php";
     }
 
-    // PROMOTE
+    
     public function admin(){
 
         if(isset($_POST['user_id'])){
