@@ -1,46 +1,47 @@
-<h2>Register</h2>
-<?php if(isset($_GET['error']) && $_GET['error']=='pass') 
-    echo "<p>Password must be 8+ characters</p>"; ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
 
-<?php if(isset($_GET['error']) && $_GET['error']=='email') 
-    echo "<p>Email already exists</p>"; ?>
+<h2>Register</h2>
 
 <form method="POST">
 
-<label>Name:</label>
-<br>
+<label>Name:</label><br>
 <input type="text" name="name" required>
-
 <small>Enter your full name</small>
 <br>
 <br>
 
-<label>Email:</label>
-<br>
+<label>Email:</label><br>
 <input type="email" name="email" required>
-
-<small>Enter valid email address</small>
+<small>Use valid email</small>
 <br>
 <br>
 
-<label>Password:</label>
-<br>
+<label>Password:</label><br>
 <input type="password" name="password" required>
-
-<small>Minimum 8 characters required</small>
+<small>Min 8 characters</small>
 <br>
 <br>
 
 <label>Role:</label><br>
-<input type="radio" name="role" value="reader" checked> Reader
+<select name="role">
+    <option value="reader">Reader</option>
+    <option value="author">Author Request</option>
+</select>
+<small>Author will be pending admin approval</small>
+<br>
+<br>
 
-<input type="radio" name="role" value="author"> Author
-
-<small>If author , admin approval required</small>
-<br><br>
-
-<button name="submit">Register</button>
+<button type="submit" name="submit">Register</button>
 
 </form>
 
+<br>
 <a href="login.php">Already have account? Login</a>
+
+</body>
+</html>

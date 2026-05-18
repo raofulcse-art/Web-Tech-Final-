@@ -1,38 +1,40 @@
-<h2>Login</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
 
-<?php if(isset($_GET['error']))
-    
-    echo "<p>Invalid email or password</p>"; ?>
-<?php if(isset($_GET['success'])) 
-    
-    echo "<p>Registration successful</p>"; ?>
+<h2>Login</h2>
 
 <form method="POST">
 
-<label>Email:</label>
-
-<br>
+<label>Email:</label><br>
 <input type="email" name="email" required>
-
-<small>Enter registered email</small>
-<br>
-<br>
+<br><br>
 
 <label>Password:</label><br>
 <input type="password" name="password" required>
-<small>Enter your password</small>
 <br><br>
 
 <label>
-<input type="checkbox" name="remember"> Remember Me (30 days login)
-
+<input type="checkbox" name="remember">
+Remember Me
 </label>
 
-<br>
-<br>
+<br><br>
 
-<button name="submit">Login</button>
+<button type="submit" name="submit">Login</button>
 
 </form>
 
+<br>
+
+<?php if(isset($_GET['error'])) echo "<p style='color:red'>Invalid login</p>"; ?>
+<?php if(isset($_GET['success'])) echo "<p style='color:green'>Registration success</p>"; ?>
+
+<br>
 <a href="register.php">Create new account</a>
+
+</body>
+</html>

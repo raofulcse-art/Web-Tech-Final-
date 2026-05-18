@@ -1,36 +1,45 @@
-<h2>All Users (Admin Panel)</h2>
+<h2>All Users (Admin)</h2>
 
-<table border="1" cellpadding="10">
-
+<table border="1">
 <tr>
-<th>ID</th>
-<th>Name</th>
-<th>Email</th>
-<th>Role</th>
-<th>Action</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Action</th>
 </tr>
 
-<?php while($u = $users->fetch(PDO::FETCH_ASSOC)) { ?>
+<?php foreach($users as $u){ ?>
 
 <tr>
-<td><?= $u['id'] ?></td>
-<td><?= $u['name'] ?></td>
-<td><?= $u['email'] ?></td>
-<td><?= $u['role'] ?></td>
+    <td><?= $u['name'] ?></td>
+    <td><?= $u['email'] ?></td>
 
-<td>
-<?php if($u['role'] != 'author'){ ?>
-    <form method="POST" action="admin.php">
-        <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-        <button>Promote to Author</button>
-    </form>
-<?php } else { ?>
-    Already Author
-<?php } ?>
-</td>
+    <td id="role-<?= $u['id'] ?>">
+        <?= $u['role'] ?>
+    </td>
 
+    <td>
+        <button onclick="promote(<?= $u['id'] ?>)">
+            Promote
+        </button>
+    </td>
 </tr>
 
 <?php } ?>
 
 </table>
+
+<script>
+function promote(id){
+
+fetch("api/promote.php", {
+    method:"POST",
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:"user_id="+id
+})
+.then(res=>res.json())
+.then(data=>{
+    document.getElementById("role-"+id).innerText="author";
+});
+}
+</script>
