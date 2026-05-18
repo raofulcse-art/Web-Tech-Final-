@@ -12,12 +12,17 @@ class UserController {
         $this->model = new User($db->connect());
     }
 
-
+   
     public function register(){
 
         if(isset($_POST['submit'])){
 
-            $pending = ($_POST['role']=='author') ? 1 : 0;
+            if(strlen($_POST['password']) < 8){
+                header("Location: register.php?error=pass");
+                exit;
+            }
+
+            $pending = ($_POST['role'] == 'author') ? 1 : 0;
 
             $ok = $this->model->register(
                 $_POST['name'],
@@ -30,7 +35,7 @@ class UserController {
             if($ok){
                 header("Location: login.php?success=1");
             } else {
-                header("Location: register.php?error=1");
+                header("Location: register.php?error=email");
             }
             exit;
         }
@@ -38,7 +43,7 @@ class UserController {
         include "../app/views/users/register.php";
     }
 
-  
+    
     public function login(){
 
         session_start();
@@ -47,23 +52,23 @@ class UserController {
 
             $user = $this->model->login($_POST['email']);
 
-            if($user && password_verify($_POST['password'],$user['password_hash'])){
+            if($user && password_verify($_POST['password'], $user['password_hash'])){
 
-                $_SESSION['user_id']=$user['id'];
-                $_SESSION['name']=$user['name'];
-                $_SESSION['role']=$user['role'];
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['role'] = $user['role'];
 
-                
+                // REMEMBER ME
                 if(isset($_POST['remember'])){
 
                     $token = bin2hex(random_bytes(16));
 
-                    $this->model->saveToken($user['id'],$token);
+                    $this->model->saveToken($user['id'], $token);
 
-                    setcookie("remember_me",$token,time()+60*60*24*30,"/");
+                    setcookie("remember_me", $token, time()+60*60*24*30, "/");
                 }
 
-                header("Location: profile.php");
+                header("Location: profile.php?login=success");
                 exit;
             }
 
@@ -74,7 +79,7 @@ class UserController {
         include "../app/views/users/login.php";
     }
 
-  
+    
     public function profile(){
 
         session_start();
@@ -90,9 +95,20 @@ class UserController {
 
             $img = $user['profile_pic_path'];
 
+          
             if(!empty($_FILES['image']['name'])){
 
-                $img = time().$_FILES['image']['name'];
+                $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+
+                if(!in_array($ext, ['jpg','jpeg','png'])){
+                    die("Invalid image type");
+                }
+
+                if($_FILES['image']['size'] > 1000000){
+                    die("Image too large");
+                }
+
+                $img = time()."_".$_FILES['image']['name'];
 
                 move_uploaded_file(
                     $_FILES['image']['tmp_name'],
@@ -100,17 +116,18 @@ class UserController {
                 );
             }
 
-           $social = json_encode([
-    "twitter" => $_POST['twitter'],
-    "github"  => $_POST['github']
-]);
+           
+            $social = json_encode([
+                "twitter" => $_POST['twitter'],
+                "github"  => $_POST['github']
+            ]);
 
-$this->model->updateProfile(
-    $_SESSION['user_id'],
-    $_POST['bio'],
-    $social,
-    $img
-);
+            $this->model->updateProfile(
+                $_SESSION['user_id'],
+                $_POST['bio'],
+                $social,
+                $img
+            );
 
             header("Location: profile.php?updated=1");
             exit;
@@ -119,7 +136,7 @@ $this->model->updateProfile(
         include "../app/views/users/profile.php";
     }
 
-  
+   
     public function users(){
 
         session_start();
@@ -129,6 +146,7 @@ $this->model->updateProfile(
         include "../app/views/users/users.php";
     }
 
+  
     public function admin(){
 
         if(isset($_POST['user_id'])){
@@ -138,7 +156,7 @@ $this->model->updateProfile(
         echo json_encode(["status"=>"success"]);
     }
 
-    // AUTHOR PAGE
+   
     public function author(){
 
         $id = $_GET['id'];
