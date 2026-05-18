@@ -1,6 +1,18 @@
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="../public/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
 <h2>All Users (Admin)</h2>
 
-<table border="1">
+<table>
+
 <tr>
     <th>Name</th>
     <th>Email</th>
@@ -19,9 +31,13 @@
     </td>
 
     <td>
+
+        <?php if($u['role'] == 'reader'){ ?>
         <button onclick="promote(<?= $u['id'] ?>)">
-            Promote
+            Promote to Author
         </button>
+        <?php } else { echo "No Action"; } ?>
+
     </td>
 </tr>
 
@@ -29,10 +45,14 @@
 
 </table>
 
+</div>
+
+</div>
+
 <script>
 function promote(id){
 
-fetch("api/promote.php", {
+fetch("../api/promote.php", {
     method:"POST",
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:"user_id="+id
@@ -43,3 +63,5 @@ fetch("api/promote.php", {
 });
 }
 </script>
+
+</body>

@@ -1,7 +1,18 @@
+<head>
+    <title>Author Profile</title>
+    <link rel="stylesheet" href="../public/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
 <h2>Author Profile</h2>
 
 <?php if(!empty($user['profile_pic_path'])) { ?>
-    <img src="../public/uploads/avatars/<?= $user['profile_pic_path'] ?>" width="120">
+    <img class="avatar" src="../public/uploads/avatars/<?= $user['profile_pic_path'] ?>">
 <?php } ?>
 
 <p><b>Name:</b> <?= $user['name'] ?></p>
@@ -26,3 +37,9 @@ $social = json_decode($user['social_links'], true);
     </a>
 <?php } else { echo "N/A"; } ?>
 </p>
+
+</div>
+
+</div>
+
+</body>
