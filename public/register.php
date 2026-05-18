@@ -1,3 +1,3 @@
 <?php require "../app/controllers/UserController.php";
-$c=new UserController();
- $c->register();
+$c = new UserController();
+$c->register();
