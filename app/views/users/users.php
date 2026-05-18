@@ -22,11 +22,9 @@
 <?php if($u['role'] != 'author'){ ?>
     <form method="POST" action="admin.php">
         <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
-
         <button>Promote to Author</button>
     </form>
-<?php } 
-else { ?>
+<?php } else { ?>
     Already Author
 <?php } ?>
 </td>
