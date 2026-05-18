@@ -17,22 +17,20 @@ class UserController {
 
         if(isset($_POST['submit'])){
 
-            if(strlen($_POST['password']) < 8){
-                header("Location: register.php?error=pass");
-                exit;
-            }
+            $pending = ($_POST['role']=='author') ? 1 : 0;
 
             $ok = $this->model->register(
                 $_POST['name'],
                 $_POST['email'],
                 $_POST['password'],
-                $_POST['role']
+                'reader',
+                $pending
             );
 
             if($ok){
                 header("Location: login.php?success=1");
             } else {
-                header("Location: register.php?error=email");
+                header("Location: register.php?error=1");
             }
             exit;
         }
@@ -40,7 +38,7 @@ class UserController {
         include "../app/views/users/register.php";
     }
 
-   
+  
     public function login(){
 
         session_start();
@@ -55,7 +53,7 @@ class UserController {
                 $_SESSION['name']=$user['name'];
                 $_SESSION['role']=$user['role'];
 
-                // remember me
+                
                 if(isset($_POST['remember'])){
 
                     $token = bin2hex(random_bytes(16));
@@ -65,7 +63,7 @@ class UserController {
                     setcookie("remember_me",$token,time()+60*60*24*30,"/");
                 }
 
-                header("Location: profile.php?login=success");
+                header("Location: profile.php");
                 exit;
             }
 
@@ -76,7 +74,7 @@ class UserController {
         include "../app/views/users/login.php";
     }
 
-   
+  
     public function profile(){
 
         session_start();
@@ -94,16 +92,6 @@ class UserController {
 
             if(!empty($_FILES['image']['name'])){
 
-                $ext = pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
-
-                if(!in_array($ext,['jpg','jpeg','png'])){
-                    die("Invalid file type");
-                }
-
-                if($_FILES['image']['size'] > 1000000){
-                    die("File too large");
-                }
-
                 $img = time().$_FILES['image']['name'];
 
                 move_uploaded_file(
@@ -113,7 +101,8 @@ class UserController {
             }
 
             $social = json_encode([
-                "facebook"=>$_POST['facebook']
+                "twitter"=>$_POST['twitter'],
+                "github"=>$_POST['github']
             ]);
 
             $this->model->updateProfile(
@@ -140,27 +129,21 @@ class UserController {
         include "../app/views/users/users.php";
     }
 
-    
     public function admin(){
 
         if(isset($_POST['user_id'])){
             $this->model->promote($_POST['user_id']);
         }
 
-        header("Location: users.php");
-        exit;
+        echo json_encode(["status"=>"success"]);
     }
 
-   
+    // AUTHOR PAGE
     public function author(){
 
         $id = $_GET['id'];
 
         $user = $this->model->getById($id);
-
-        if(!$user){
-            die("Author not found");
-        }
 
         include "../app/views/users/author.php";
     }
