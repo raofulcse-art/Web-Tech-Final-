@@ -26,6 +26,8 @@
 
 <div class="card">
 
+<h3>Update Profile</h3>
+
 <form method="POST" enctype="multipart/form-data">
 
 <label>Bio:</label>
@@ -48,7 +50,13 @@
 
 </div>
 
-<a href="logout.php">Logout</a>
+<div class="card" style="text-align:center">
+
+<a href="logout.php">
+    <button style="background:red">Logout</button>
+</a>
+
+</div>
 
 </div>
 

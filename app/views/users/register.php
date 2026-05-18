@@ -4,38 +4,33 @@
     <title>Register</title>
     <link rel="stylesheet" href="../public/style.css">
 </head>
+
 <body>
+
+<div class="form-box">
 
 <h2>Register</h2>
 
 <form method="POST">
 
-<label>Name:</label><br>
+<label>Name:</label>
 <input type="text" name="name" required>
 <small>Enter your full name</small>
-<br>
-<br>
 
-<label>Email:</label><br>
+<label>Email:</label>
 <input type="email" name="email" required>
 <small>Use valid email</small>
-<br>
-<br>
 
-<label>Password:</label><br>
+<label>Password:</label>
 <input type="password" name="password" required>
 <small>Min 8 characters</small>
-<br>
-<br>
 
-<label>Role:</label><br>
+<label>Role:</label>
 <select name="role">
     <option value="reader">Reader</option>
     <option value="author">Author Request</option>
 </select>
 <small>Author will be pending admin approval</small>
-<br>
-<br>
 
 <button type="submit" name="submit">Register</button>
 
@@ -43,6 +38,8 @@
 
 <br>
 <a href="login.php">Already have account? Login</a>
+
+</div>
 
 </body>
 </html>
