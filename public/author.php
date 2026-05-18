@@ -21,6 +21,7 @@ if(!$user){
 ?>
 
 <!DOCTYPE html>
+
 <html>
 <head>
     <title>Author Profile</title>
@@ -29,17 +30,18 @@ if(!$user){
 
 <h2>Author Profile</h2>
 
-<!-- PROFILE IMAGE -->
 <?php if(!empty($user['profile_pic_path'])) { ?>
     <img src="uploads/avatars/<?= $user['profile_pic_path'] ?>" width="150">
-<?php } else { ?>
+<?php }
+ else { ?>
     <p>No Image</p>
 <?php } ?>
 
 <hr>
 
-<!-- BASIC INFO -->
+
 <p><b>Name:</b> <?= $user['name'] ?></p>
+
 <p><b>Email:</b> <?= $user['email'] ?></p>
 <p><b>Role:</b> <?= $user['role'] ?></p>
 
@@ -57,9 +59,8 @@ $social = json_decode($user['social_links'], true);
 
 <hr>
 
-<!-- PLACEHOLDER FOR TASK-3 (ARTICLES) -->
+
 <h3>Published Articles</h3>
-<p>(Task-2/3 connect করলে এখানে articles দেখাবে)</p>
 
 </body>
 </html>
