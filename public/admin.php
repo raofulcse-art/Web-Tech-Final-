@@ -1,4 +1,3 @@
-<?php
-require_once "../app/controllers/UserController.php";
-$c = new UserController();
-$c->admin();
+<?php require "../app/controllers/UserController.php";
+$c=new UserController();
+ $c->admin();
