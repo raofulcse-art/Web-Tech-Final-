@@ -1,6 +1,4 @@
-<?php session_start(); ?>
-
-<h2>My Profile</h2>
+<h2>Update Profile</h2>
 
 <form method="POST" enctype="multipart/form-data">
 
@@ -9,27 +7,21 @@
 <br><br>
 
 <label>Twitter:</label><br>
-<input type="text" name="twitter">
+<input type="text" name="twitter"
+value="<?= json_decode($user['social_links'],true)['twitter'] ?? '' ?>">
 <br><br>
 
 <label>GitHub:</label><br>
-<input type="text" name="github">
+<input type="text" name="github"
+value="<?= json_decode($user['social_links'],true)['github'] ?? '' ?>">
 <br><br>
 
 <label>Profile Image:</label><br>
 <input type="file" name="image">
 <br><br>
 
-<button type="submit" name="submit">Update Profile</button>
+<button type="submit" name="submit">Update</button>
 
 </form>
 
-<br>
-
-<?php if(isset($_GET['updated'])) echo "<p style='color:green'>Profile Updated</p>"; ?>
-
-<br>
-
-<a href="logout.php">Logout</a>
-<br>
-<a href="back.php">Back (Logout & Reset)</a>
+<?php if(isset($_GET['updated'])) echo "<p style='color:green'>Updated Successfully</p>"; ?>
