@@ -33,10 +33,10 @@
     <td>
 
         <?php if($u['role'] == 'reader'){ ?>
-        <button onclick="promote(<?= $u['id'] ?>)">
+        <button class="btn-promote" onclick="promote(<?= $u['id'] ?>)">
             Promote to Author
         </button>
-        <?php } else { echo "No Action"; } ?>
+        <?php } else { echo "<span style='color:green'>Approved</span>"; } ?>
 
     </td>
 </tr>

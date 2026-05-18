@@ -18,6 +18,12 @@
 <p><b>Name:</b> <?= $user['name'] ?></p>
 <p><b>Bio:</b> <?= $user['bio'] ?></p>
 
+</div>
+
+<div class="card">
+
+<h3>Social Links</h3>
+
 <?php
 $social = json_decode($user['social_links'], true);
 ?>
